@@ -82,10 +82,10 @@ export default function Home() {
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex gap-4 items-center">
-            <Link href={'https://github.com/syxhri'} target="_blank" aria-label="GitHub" className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandGithub className="w-6 h-6" /></Link>
-            <Link href={'https://instagram.com/alfi.ndyou'} target="_blank" aria-label="Instagram" className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandInstagram className="w-6 h-6" /></Link>
-            <Link href={'https://www.linkedin.com/in/alfisyahri-asa'} target="_blank" aria-label="LinkedIn" className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandLinkedin className="w-6 h-6" /></Link>
-            <Link href={'mailto:alfisyahri.aac@gmail.com'} target="_blank" aria-label="Email" className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconMail className="w-6 h-6" /></Link>
+            <Link href={'https://github.com/syxhri'} target="_blank" aria-label="GitHub" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandGithub className="w-6 h-6" /></Link>
+            <Link href={'https://instagram.com/alfi.ndyou'} target="_blank" aria-label="Instagram" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandInstagram className="w-6 h-6" /></Link>
+            <Link href={'https://www.linkedin.com/in/alfisyahri-asa'} target="_blank" aria-label="LinkedIn" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandLinkedin className="w-6 h-6" /></Link>
+            <Link href={'mailto:alfisyahri.aac@gmail.com'} target="_blank" aria-label="Email" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconMail className="w-6 h-6" /></Link>
           </div>
           <a
             href="/Curriculum Vitae - Alfisyahri Amrun A.pdf"
