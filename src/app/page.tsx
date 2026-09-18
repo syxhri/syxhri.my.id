@@ -58,7 +58,7 @@ export default function Home() {
         <h1 className="text-xl md:text-2xl text-gray-900 dark:text-white font-bold">Hi 👋, I'm Alfisyahri Amrun A.</h1>
         <div className="text-neutral-700 dark:text-neutral-300 text-justify leading-7 flex flex-col gap-4 mt-2">
           <p>
-            I am Alfisyahri Amrun A., also known as Asa, a Software Engineering Technology student at Universitas Negeri Gorontalo, currently pursuing a D4 degree in Software Engineering Technology. I have a strong interest in software development and enjoy learning by building projects and experimenting with different technologies.
+            also known as Asa, a Software Engineering Technology student at Universitas Negeri Gorontalo, currently pursuing a D4 degree in Software Engineering Technology. I have a strong interest in software development and enjoy learning by building projects and experimenting with different technologies.
           </p>
           <p>
             My interests span across backend development, web development, and data-related technologies. I work with programming languages such as Go, Python, JavaScript, and Kotlin, while continuously improving my understanding of databases, APIs, and software development practices.
