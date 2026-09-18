@@ -71,7 +71,7 @@ export default function Home() {
             I am Alfisyahri Amrun A., also known as Asa, a Software Engineering student at Universitas Negeri Gorontalo. I have a strong interest in software development and enjoy learning by building projects, exploring different technologies, and turning ideas into working software.
           </p>
           <p>
-            My main interests span across backend development, web engineering, and data-related technologies. I work primarily with programming languages such as Go, Python, JavaScript, and Kotlin, while continuously deepening my understanding of database architectures, APIs, and modern development practices.
+            My main interests span across backend development, web engineering, and data-related technologies. I work primarily with programming languages such as Python, JavaScript, TypeScript, Java and Go, while continuously deepening my understanding of database architectures, APIs, and modern development practices.
           </p>
           <p>
             As a developer, I enjoy learning through personal projects and practical experiments. I have experience working with{" "}
