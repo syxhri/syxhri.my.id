@@ -71,19 +71,19 @@ export default function Home() {
             I am Alfisyahri Amrun A., also known as Asa, a Software Engineering student at Universitas Negeri Gorontalo. I have a strong interest in software development and enjoy learning by building projects, exploring different technologies, and turning ideas into working software.
           </p>
           <p>
-            My main interests span across backend development, web engineering, and data-related technologies. I work primarily with programming languages such as Python, JavaScript, TypeScript, Java and Go, while continuously deepening my understanding of database architectures, APIs, and modern development practices.
-          </p>
-          <p>
             As a developer, I enjoy learning through personal projects and practical experiments. I have experience working with{" "}
             <span className="highlight">{GHLang}</span> and have contributed to{" "}
             <span className="highlight">{contrib}</span> repositories on GitHub, ranging from small utility experiments to projects built to strengthen my technical skills.
+          </p>
+          <p>
+            My main interests span across backend development, web engineering, and data-related technologies. I work primarily with programming languages such as Python, JavaScript, TypeScript, Java and Go, while continuously deepening my understanding of database architectures, APIs, and modern development practices.
           </p>
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex gap-4 items-center">
             <Link href={'https://github.com/syxhri'} target="_blank" aria-label="GitHub" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandGithub className="w-6 h-6" /></Link>
-            <Link href={'https://instagram.com/alfi.ndyou'} target="_blank" aria-label="Instagram" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandInstagram className="w-6 h-6" /></Link>
+            <Link href={'https://instagram.com/alfi.syahri'} target="_blank" aria-label="Instagram" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandInstagram className="w-6 h-6" /></Link>
             <Link href={'https://www.linkedin.com/in/alfisyahri-asa'} target="_blank" aria-label="LinkedIn" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconBrandLinkedin className="w-6 h-6" /></Link>
             <Link href={'mailto:alfisyahri.aac@gmail.com'} target="_blank" aria-label="Email" className="inline-flex items-center text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconMail className="w-6 h-6" /></Link>
           </div>
