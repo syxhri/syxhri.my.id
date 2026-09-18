@@ -47,7 +47,7 @@ export default function Guestbook() {
     return (
         <>
             <Navbar page="guestbook" />
-            <div className="mt-20">
+            <div className="mt-8 sm:mt-16">
                 <h1 className="text-xl md:text-2xl text-gray-900 dark:text-white font-bold">Guestbook</h1>
                 <div className="mt-2 leading-7 text-neutral-700 dark:text-neutral-300">
                     <p>Leave a message and say haloo!</p>

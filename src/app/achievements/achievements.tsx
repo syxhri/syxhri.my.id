@@ -5,7 +5,7 @@ export default function Achievements() {
     return (
         <>
             <Navbar page="achievements" />
-            <div className="mt-20">
+            <div className="mt-8 sm:mt-16">
                 <h1 className="text-xl md:text-2xl text-gray-900 dark:text-white font-bold">My Achievements!</h1>
                 <div className="mt-4 leading-7 text-neutral-700 dark:text-neutral-300">
                     <ul className="pl-5">

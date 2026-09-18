@@ -35,4 +35,8 @@
 
 .highlight {
   @apply bg-primary-500 dark:bg-primary-500 text-white px-1.5 py-0.5 rounded-xs font-geist-mono text-sm;
+}
+
+#nprogress .spinner {
+  display: none !important;
 } 

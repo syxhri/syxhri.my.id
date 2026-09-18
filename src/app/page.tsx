@@ -55,7 +55,7 @@ export default function Home() {
   return (
     <>
       <Navbar page="home" />
-      <div className="mt-16">
+      <div className="mt-8 sm:mt-16">
         <div className="flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <h1 className="text-xl md:text-2xl text-gray-900 dark:text-white font-bold">Hi 👋, I'm Alfisyahri Amrun A.</h1>
@@ -97,7 +97,7 @@ export default function Home() {
           </a>
         </div>
       </div>
-      <div className="mt-32">
+      <div className="mt-16 sm:mt-24">
         <h1 className="text-xl md:text-2xl text-gray-900 dark:text-white font-bold">Get In Touch 📮</h1>
         <form onSubmit={handleSubmit(sendMessage)} className="mt-4 text-neutral-700 dark:text-neutral-300">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
