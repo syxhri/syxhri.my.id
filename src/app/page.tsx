@@ -60,20 +60,23 @@ export default function Home() {
           <div>
             <h1 className="text-xl md:text-2xl text-gray-900 dark:text-white font-bold">Hi 👋, I'm Alfisyahri Amrun A.</h1>
             <p className="text-sm text-primary-600 dark:text-primary-400 font-mono mt-1">
-              Software Engineering Technology Student • Gorontalo, ID
+              Software Engineering Student • Gorontalo, Indonesia
             </p>
           </div>
           <ProfileAvatar className="w-20 h-20 sm:w-24 sm:h-24 shrink-0" />
         </div>
 
-        <div className="text-neutral-700 dark:text-neutral-300 leading-7 flex flex-col gap-3 mt-4 text-justify">
+        <div className="text-neutral-700 dark:text-neutral-300 leading-7 flex flex-col gap-4 mt-4 text-justify">
           <p>
-            Also known as Asa, a Software Engineering Technology student at Universitas Negeri Gorontalo. I focus on backend systems, web development, and data technologies, working with Go, Python, JavaScript, and Kotlin.
+            I am Alfisyahri Amrun A., also known as Asa, a Software Engineering student at Universitas Negeri Gorontalo. I have a strong interest in software development and enjoy learning by building projects, exploring different technologies, and turning ideas into working software.
           </p>
           <p>
-            I love learning by building practical software and experimenting with modern tech. Currently, I work mostly with{" "}
+            My main interests span across backend development, web engineering, and data-related technologies. I work primarily with programming languages such as Go, Python, JavaScript, and Kotlin, while continuously deepening my understanding of database architectures, APIs, and modern development practices.
+          </p>
+          <p>
+            As a developer, I enjoy learning through personal projects and practical experiments. I have experience working with{" "}
             <span className="highlight">{GHLang}</span> and have contributed to{" "}
-            <span className="highlight">{contrib}</span> repositories on GitHub.
+            <span className="highlight">{contrib}</span> repositories on GitHub, ranging from small utility experiments to projects built to strengthen my technical skills.
           </p>
         </div>
 
@@ -85,7 +88,7 @@ export default function Home() {
             <Link href={'mailto:alfisyahri.aac@gmail.com'} target="_blank" aria-label="Email" className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"><IconMail className="w-6 h-6" /></Link>
           </div>
           <a
-            href="/Curriculum Vitae.pdf"
+            href="/Curriculum Vitae - Alfisyahri Amrun A.pdf"
             download="Curriculum Vitae - Alfisyahri Amrun A.pdf"
             className="inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-md bg-primary-500 hover:bg-primary-600 text-white shadow-xs transition-all"
           >
