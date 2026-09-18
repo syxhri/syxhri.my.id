@@ -1,5 +1,4 @@
 import { Icon, IconBrandCpp, IconBrandJavascript, IconBrandNextjs, IconBrandNpm, IconBrandPython, IconProps } from "@tabler/icons-react";
-import { IconPostgresql } from "../components/postgresql";
 
 type projectsData = Array<{
     name: string;
@@ -15,7 +14,7 @@ const projects: projectsData = [
     {
         name: 'Jokiwi (Joki Wizee)',
         description: 'A simple web app to manage joki orders, payments, deadlines, and receipts.',
-        technologies: [IconBrandJavascript, IconBrandNpm, IconBrandNextjs, IconPostgresql],
+        technologies: [IconBrandJavascript, IconBrandNpm, IconBrandNextjs],
         links: {
             github: 'https://github.com/syxhri/jokiwi',
             demo: 'https://www.jokiwi.app'
