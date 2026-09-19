@@ -3,6 +3,7 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import Navbar from "@/components/navbar";
+import NowPlaying from "@/components/now-playing";
 import ProfileAvatar from "@/components/profile-avatar";
 import Textarea from "@/components/textarea";
 import buildValidationError from "@/lib/build-validation-error";
@@ -97,7 +98,13 @@ export default function Home() {
           </a>
         </div>
       </div>
-      <div className="mt-16 sm:mt-24">
+
+      {/* Music Widget (Liquid Glass) with generous breathing room */}
+      <div className="my-14 sm:my-20">
+        <NowPlaying />
+      </div>
+
+      <div>
         <h1 className="text-xl md:text-2xl text-gray-900 dark:text-white font-bold">Get In Touch 📮</h1>
         <form onSubmit={handleSubmit(sendMessage)} className="mt-4 text-neutral-700 dark:text-neutral-300">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
