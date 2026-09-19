@@ -30,6 +30,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const ytPlayerRef = useRef<any>(null);
   const currentKeyRef = useRef<string | null>(null);
   const isMutedRef = useRef<boolean>(false);
+  const userHasInteractedRef = useRef<boolean>(false);
   const activeSourceRef = useRef<"youtube" | "html5">("youtube");
   const fallbackAudioUrlRef = useRef<string | null>(null);
 
@@ -99,8 +100,8 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       const createPlayer = () => {
         try {
           ytPlayerRef.current = new (window as any).YT.Player("asa-yt-player", {
-            height: "1",
-            width: "1",
+            height: "200",
+            width: "200",
             videoId: videoId,
             playerVars: {
               autoplay: 1,
@@ -114,13 +115,27 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
             },
             events: {
               onReady: (event: any) => {
+                event.target.setVolume(100);
+
                 if (isMutedRef.current) {
                   event.target.mute();
+                  event.target.playVideo();
                 } else {
+                  // User wants unmuted audio!
                   event.target.unMute();
-                  event.target.setVolume(100);
+                  event.target.playVideo();
+
+                  // If browser blocked unmuted autoplay because user hasn't interacted yet,
+                  // start playing (muted as buffer) and unmute immediately on interaction
+                  setTimeout(() => {
+                    const state = event.target.getPlayerState?.();
+                    // If not actively playing (e.g. -1 unstarted or 2 paused by browser autoplay restriction)
+                    if (state !== 1 && !isMutedRef.current) {
+                      event.target.mute();
+                      event.target.playVideo();
+                    }
+                  }, 400);
                 }
-                event.target.playVideo();
               },
               onStateChange: (event: any) => {
                 const YT = (window as any).YT;
@@ -129,6 +144,11 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
                 }
                 if (event.data === YT?.PlayerState?.PLAYING) {
                   setIsPlaying(true);
+                  // If we are supposed to be unmuted and user interacted, ensure unmuted
+                  if (!isMutedRef.current && userHasInteractedRef.current && event.target.isMuted?.()) {
+                    event.target.unMute();
+                    event.target.setVolume(100);
+                  }
                 } else if (event.data === YT?.PlayerState?.PAUSED) {
                   setIsPlaying(false);
                 }
@@ -225,24 +245,30 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       checkTrack();
     }, 20000);
 
-    // Ensure audio starts unmuted on first interaction if blocked by browser policy
+    // Persistent interaction trigger: whenever user interacts, make sure audio is unmuted and playing
     const handleUserInteraction = () => {
+      userHasInteractedRef.current = true;
+
       if (!isMutedRef.current) {
-        if (activeSourceRef.current === "youtube" && ytPlayerRef.current && typeof ytPlayerRef.current.unMute === "function") {
-          ytPlayerRef.current.unMute();
-          ytPlayerRef.current.setVolume(100);
-          ytPlayerRef.current.playVideo();
-        } else if (activeSourceRef.current === "html5" && audioRef.current && audioRef.current.paused && audioRef.current.src) {
-          audioRef.current.muted = false;
-          audioRef.current.play().catch(() => {});
+        if (activeSourceRef.current === "youtube" && ytPlayerRef.current) {
+          try {
+            ytPlayerRef.current.unMute?.();
+            ytPlayerRef.current.setVolume?.(100);
+            ytPlayerRef.current.playVideo?.();
+          } catch (e) {}
+        } else if (activeSourceRef.current === "html5" && audioRef.current && audioRef.current.src) {
+          try {
+            audioRef.current.muted = false;
+            audioRef.current.play().catch(() => {});
+          } catch (e) {}
         }
       }
     };
 
-    window.addEventListener("pointerdown", handleUserInteraction, { once: true });
-    window.addEventListener("click", handleUserInteraction, { once: true });
-    window.addEventListener("keydown", handleUserInteraction, { once: true });
-    window.addEventListener("touchstart", handleUserInteraction, { once: true });
+    window.addEventListener("pointerdown", handleUserInteraction);
+    window.addEventListener("click", handleUserInteraction);
+    window.addEventListener("keydown", handleUserInteraction);
+    window.addEventListener("touchstart", handleUserInteraction);
 
     return () => {
       clearInterval(interval);
@@ -257,6 +283,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     const nextMuted = !isMuted;
     setIsMuted(nextMuted);
     isMutedRef.current = nextMuted;
+    userHasInteractedRef.current = true;
 
     try {
       localStorage.setItem("asa_music_muted", nextMuted ? "true" : "false");
@@ -297,12 +324,13 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       <div
         style={{
           position: "fixed",
-          bottom: -9999,
-          left: -9999,
-          width: 1,
-          height: 1,
-          opacity: 0,
+          top: 0,
+          left: 0,
+          width: 200,
+          height: 200,
+          opacity: 0.001,
           pointerEvents: "none",
+          zIndex: -9999,
         }}
       >
         <div id="asa-yt-player" />
