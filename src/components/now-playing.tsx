@@ -93,7 +93,6 @@ export default function NowPlaying({ className }: { className?: string }) {
       aria-label={`Listen to ${data.title} by ${data.artist} on Spotify`}
       className={cn(
         "group block w-full max-w-md mx-auto rounded-2xl p-3 sm:p-3.5",
-        // Liquid Glass aesthetic
         "bg-white/60 dark:bg-shark-900/60 backdrop-blur-md",
         "border border-shark-200/60 dark:border-shark-800/60",
         "shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.3)]",
@@ -105,10 +104,8 @@ export default function NowPlaying({ className }: { className?: string }) {
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        {/* Album Artwork or Vinyl Disc Fallback */}
         <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 ring-1 ring-black/5 dark:ring-white/10 shadow-xs bg-neutral-100 dark:bg-shark-800 flex items-center justify-center">
           {data.albumImageUrl && !imgError ? (
-            // Using standard img to handle external CDNs reliably without remotePatterns restrictions
             <img
               src={data.albumImageUrl}
               alt={`${data.album || data.title} artwork`}
@@ -120,7 +117,6 @@ export default function NowPlaying({ className }: { className?: string }) {
             <IconDisc className="w-6 h-6 text-[#1DB954] transition-transform duration-700 group-hover:rotate-45" />
           )}
 
-          {/* Mini overlay equalizer / play icon when playing */}
           {isPlaying && (
             <div className="absolute inset-0 bg-black/25 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <IconExternalLink className="w-4 h-4 text-white drop-shadow" />
@@ -128,9 +124,7 @@ export default function NowPlaying({ className }: { className?: string }) {
           )}
         </div>
 
-        {/* Track & Artist info */}
         <div className="flex-1 min-w-0 flex flex-col justify-center">
-          {/* Header row: Spotify status */}
           <div className="flex items-center gap-1.5 mb-1">
             <IconBrandSpotify className="w-3.5 h-3.5 text-[#1DB954] shrink-0" />
             {isPlaying ? (
@@ -150,18 +144,15 @@ export default function NowPlaying({ className }: { className?: string }) {
             )}
           </div>
 
-          {/* Title */}
           <p className="text-sm font-semibold text-gray-900 dark:text-white truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
             {data.title}
           </p>
 
-          {/* Artist */}
           <p className="text-xs text-neutral-600 dark:text-neutral-400 truncate">
             {data.artist}
           </p>
         </div>
 
-        {/* Right action hint / Spotify green hover accent */}
         <div className="shrink-0 text-neutral-400 dark:text-neutral-500 group-hover:text-[#1DB954] group-hover:translate-x-0.5 transition-all">
           <IconExternalLink className="w-4 h-4" />
         </div>

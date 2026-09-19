@@ -99,8 +99,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Music Widget (Liquid Glass) with generous breathing room */}
-      <div className="my-14 sm:my-20">
+      <div className="my-24 sm:my-30">
         <NowPlaying />
       </div>
 

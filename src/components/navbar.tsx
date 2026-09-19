@@ -4,6 +4,7 @@ import { cn } from "@/lib/cn";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import MuteToggle from "./mute-toggle";
 import ThemeSwitch from "./theme-switch";
 
 type page = 'home' | 'achievements' | 'projects' | 'guestbook';
@@ -30,14 +31,18 @@ export default function Navbar({ page }: { page?: page }) {
     return (
         <nav className="flex items-center justify-between">
             <Link href="/" className="font-bold text-xl text-gray-900 dark:text-white">alfi<span className="text-primary-500 dark:text-primary-400">.syahri</span></Link>
-            <div className="sm:flex gap-6 hidden">
+            <div className="sm:flex gap-6 hidden items-center">
                 <Link href={'/'} className={cn("text-neutral-700 dark:text-neutral-300", page === 'home' && "underline text-gray-900 dark:text-white")}>home</Link>
                 {/* <Link href={'/achievements'} className={cn("text-neutral-700 dark:text-neutral-300", page === 'achievements' && "underline text-gray-900 dark:text-white")}>achievements</Link> */}
                 <Link href={'/projects'} className={cn("text-neutral-700 dark:text-neutral-300", page === 'projects' && "underline text-gray-900 dark:text-white")}>projects</Link>
                 <Link href={'/guestbook'} className={cn("text-neutral-700 dark:text-neutral-300", page === 'guestbook' && "underline text-gray-900 dark:text-white")}>guestbook</Link>
-                <ThemeSwitch />
+                <div className="flex items-center gap-4">
+                    <MuteToggle iconSize={18} />
+                    <ThemeSwitch />
+                </div>
             </div>
             <div className="sm:hidden flex gap-4 items-center">
+                <MuteToggle iconSize={24} />
                 <ThemeSwitch iconSize={24} />
                 <button onClick={() => setOpen(true)} aria-label="Open menu" className="text-neutral-700 dark:text-neutral-300 cursor-pointer">
                     <IconMenu2 className="w-6 h-6" />
