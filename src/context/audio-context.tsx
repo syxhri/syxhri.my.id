@@ -11,7 +11,7 @@ type AudioContextType = {
 };
 
 const AudioContext = createContext<AudioContextType>({
-  isMuted: true,
+  isMuted: false,
   isPlaying: false,
   trackTitle: null,
   trackArtist: null,
@@ -21,37 +21,52 @@ const AudioContext = createContext<AudioContextType>({
 export const useAudio = () => useContext(AudioContext);
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
-  const [isMuted, setIsMuted] = useState<boolean>(true);
+  // Default to unmuted as requested by user
+  const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [trackTitle, setTrackTitle] = useState<string | null>(null);
   const [trackArtist, setTrackArtist] = useState<string | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const ytPlayerRef = useRef<any>(null);
   const currentKeyRef = useRef<string | null>(null);
-  const isMutedRef = useRef<boolean>(true);
+  const isMutedRef = useRef<boolean>(false);
+  const activeSourceRef = useRef<"youtube" | "html5">("youtube");
 
   useEffect(() => {
     isMutedRef.current = isMuted;
   }, [isMuted]);
 
+  // Read saved mute preference: default unmuted unless user explicitly muted
   useEffect(() => {
     try {
       const saved = localStorage.getItem("asa_music_muted");
-      if (saved === "false") {
-        setIsMuted(false);
-        isMutedRef.current = false;
-      } else {
+      if (saved === "true") {
         setIsMuted(true);
         isMutedRef.current = true;
+      } else {
+        setIsMuted(false);
+        isMutedRef.current = false;
       }
     } catch {
-      setIsMuted(true);
+      setIsMuted(false);
+      isMutedRef.current = false;
     }
   }, []);
 
+  // Initialize YouTube API and fallback audio
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Load YouTube Iframe API for full track playback
+    if (!(window as any).YT) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    // Prepare fallback HTML5 audio
     if (!audioRef.current) {
       const audio = new Audio();
       audio.loop = true;
@@ -59,13 +74,91 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       audio.muted = isMutedRef.current;
 
       audio.onplay = () => setIsPlaying(true);
-      audio.onpause = () => setIsPlaying(false);
-      audio.onerror = () => setIsPlaying(false);
+      audio.onpause = () => {
+        if (activeSourceRef.current === "html5") setIsPlaying(false);
+      };
+      audio.onerror = () => {
+        if (activeSourceRef.current === "html5") setIsPlaying(false);
+      };
 
       audioRef.current = audio;
     }
 
-    const audio = audioRef.current;
+    const initOrLoadYt = (videoId: string) => {
+      activeSourceRef.current = "youtube";
+      if (audioRef.current) audioRef.current.pause();
+
+      const createPlayer = () => {
+        try {
+          ytPlayerRef.current = new (window as any).YT.Player("asa-yt-player", {
+            height: "1",
+            width: "1",
+            videoId: videoId,
+            playerVars: {
+              autoplay: 1,
+              controls: 0,
+              disablekb: 1,
+              fs: 0,
+              modestbranding: 1,
+              rel: 0,
+              loop: 1,
+              playsinline: 1,
+            },
+            events: {
+              onReady: (event: any) => {
+                if (isMutedRef.current) {
+                  event.target.mute();
+                } else {
+                  event.target.unMute();
+                  event.target.setVolume(100);
+                }
+                event.target.playVideo();
+              },
+              onStateChange: (event: any) => {
+                const YT = (window as any).YT;
+                if (event.data === YT?.PlayerState?.ENDED) {
+                  event.target.playVideo(); // Loop full song
+                }
+                if (event.data === YT?.PlayerState?.PLAYING) {
+                  setIsPlaying(true);
+                } else if (event.data === YT?.PlayerState?.PAUSED) {
+                  setIsPlaying(false);
+                }
+              },
+              onError: () => {
+                // If YouTube embedding is restricted for this track, fallback to audio stream
+                if (audioRef.current && audioRef.current.src) {
+                  activeSourceRef.current = "html5";
+                  audioRef.current.muted = isMutedRef.current;
+                  audioRef.current.play().catch(() => {});
+                }
+              },
+            },
+          });
+        } catch (e) {
+          console.error("Error creating YouTube player:", e);
+        }
+      };
+
+      if ((window as any).YT && (window as any).YT.Player) {
+        if (ytPlayerRef.current && typeof ytPlayerRef.current.loadVideoById === "function") {
+          ytPlayerRef.current.loadVideoById(videoId);
+          if (!isMutedRef.current) {
+            ytPlayerRef.current.unMute();
+            ytPlayerRef.current.setVolume(100);
+          } else {
+            ytPlayerRef.current.mute();
+          }
+          ytPlayerRef.current.playVideo();
+        } else {
+          createPlayer();
+        }
+      } else {
+        (window as any).onYouTubeIframeAPIReady = () => {
+          createPlayer();
+        };
+      }
+    };
 
     const loadTrackAudio = async (title: string, artist: string) => {
       const key = `${title.toLowerCase().trim()}:::${artist.toLowerCase().trim()}`;
@@ -83,17 +176,19 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         );
         if (!res.ok) return;
         const data = await res.json();
-        if (data && data.audioUrl) {
-          audio.src = data.audioUrl;
-          audio.muted = isMutedRef.current;
 
-          audio
-            .play()
-            .then(() => setIsPlaying(true))
-            .catch(() => {
-              if (!isMutedRef.current) {
-              }
-            });
+        // Store fallback audio stream
+        if (data?.audioUrl && audioRef.current) {
+          audioRef.current.src = data.audioUrl;
+        }
+
+        // Play full song via YouTube Music ID if available
+        if (data && data.youtubeId) {
+          initOrLoadYt(data.youtubeId);
+        } else if (data?.audioUrl && audioRef.current) {
+          activeSourceRef.current = "html5";
+          audioRef.current.muted = isMutedRef.current;
+          audioRef.current.play().catch(() => {});
         }
       } catch (err) {
         console.error("Failed to load track audio:", err);
@@ -113,26 +208,41 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
+    // Initial check
     checkTrack();
 
+    // Check periodically for Last.fm changes every 20s
     const interval = setInterval(() => {
       if (typeof document !== "undefined" && document.hidden) return;
       checkTrack();
-    }, 25000);
+    }, 20000);
 
-    const handleFirstInteraction = () => {
-      if (!isMutedRef.current && audio && audio.paused && audio.src) {
-        audio.play().catch(() => {});
+    // Ensure audio starts unmuted on first interaction if blocked by browser policy
+    const handleUserInteraction = () => {
+      if (!isMutedRef.current) {
+        if (ytPlayerRef.current && typeof ytPlayerRef.current.unMute === "function") {
+          ytPlayerRef.current.unMute();
+          ytPlayerRef.current.setVolume(100);
+          ytPlayerRef.current.playVideo();
+        }
+        if (audioRef.current && audioRef.current.paused && audioRef.current.src) {
+          audioRef.current.muted = false;
+          audioRef.current.play().catch(() => {});
+        }
       }
     };
 
-    window.addEventListener("click", handleFirstInteraction, { once: true });
-    window.addEventListener("keydown", handleFirstInteraction, { once: true });
+    window.addEventListener("pointerdown", handleUserInteraction, { once: true });
+    window.addEventListener("click", handleUserInteraction, { once: true });
+    window.addEventListener("keydown", handleUserInteraction, { once: true });
+    window.addEventListener("touchstart", handleUserInteraction, { once: true });
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener("click", handleFirstInteraction);
-      window.removeEventListener("keydown", handleFirstInteraction);
+      window.removeEventListener("pointerdown", handleUserInteraction);
+      window.removeEventListener("click", handleUserInteraction);
+      window.removeEventListener("keydown", handleUserInteraction);
+      window.removeEventListener("touchstart", handleUserInteraction);
     };
   }, []);
 
@@ -145,10 +255,26 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("asa_music_muted", nextMuted ? "true" : "false");
     } catch {}
 
+    // Control YouTube Player
+    if (ytPlayerRef.current) {
+      try {
+        if (nextMuted) {
+          ytPlayerRef.current.mute();
+        } else {
+          ytPlayerRef.current.unMute();
+          ytPlayerRef.current.setVolume(100);
+          ytPlayerRef.current.playVideo();
+        }
+      } catch (e) {
+        console.error("Error toggling YouTube mute:", e);
+      }
+    }
+
+    // Control Fallback HTML5 Audio
     if (audioRef.current) {
       audioRef.current.muted = nextMuted;
       if (!nextMuted) {
-        audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+        audioRef.current.play().catch(() => {});
       }
     }
   };
@@ -163,6 +289,20 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         toggleMute,
       }}
     >
+      {/* Hidden YouTube player container for full song audio */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: -9999,
+          left: -9999,
+          width: 1,
+          height: 1,
+          opacity: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <div id="asa-yt-player" />
+      </div>
       {children}
     </AudioContext.Provider>
   );
