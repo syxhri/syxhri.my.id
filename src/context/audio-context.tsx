@@ -245,33 +245,55 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       checkTrack();
     }, 20000);
 
-    // Persistent interaction trigger: whenever user interacts, make sure audio is unmuted and playing
+    // Persistent interaction trigger: whenever user interacts (including scroll, mouse move, touch), ensure audio is unmuted and playing
     const handleUserInteraction = () => {
       userHasInteractedRef.current = true;
 
       if (!isMutedRef.current) {
         if (activeSourceRef.current === "youtube" && ytPlayerRef.current) {
           try {
-            ytPlayerRef.current.unMute?.();
-            ytPlayerRef.current.setVolume?.(100);
-            ytPlayerRef.current.playVideo?.();
+            if (ytPlayerRef.current.isMuted?.()) {
+              ytPlayerRef.current.unMute();
+              ytPlayerRef.current.setVolume(100);
+            }
+            const state = ytPlayerRef.current.getPlayerState?.();
+            if (state !== 1) {
+              ytPlayerRef.current.playVideo();
+            }
           } catch (e) {}
         } else if (activeSourceRef.current === "html5" && audioRef.current && audioRef.current.src) {
           try {
-            audioRef.current.muted = false;
-            audioRef.current.play().catch(() => {});
+            if (audioRef.current.muted) {
+              audioRef.current.muted = false;
+            }
+            if (audioRef.current.paused) {
+              audioRef.current.play().catch(() => {});
+            }
           } catch (e) {}
         }
       }
     };
 
+    // Listen to ALL possible user actions: scroll, mouse movement, touch gestures, keypresses
+    window.addEventListener("scroll", handleUserInteraction, { passive: true });
+    document.addEventListener("scroll", handleUserInteraction, { passive: true });
+    window.addEventListener("wheel", handleUserInteraction, { passive: true });
+    window.addEventListener("touchmove", handleUserInteraction, { passive: true });
+    window.addEventListener("pointermove", handleUserInteraction, { passive: true });
+    window.addEventListener("mousemove", handleUserInteraction, { passive: true });
     window.addEventListener("pointerdown", handleUserInteraction);
     window.addEventListener("click", handleUserInteraction);
     window.addEventListener("keydown", handleUserInteraction);
-    window.addEventListener("touchstart", handleUserInteraction);
+    window.addEventListener("touchstart", handleUserInteraction, { passive: true });
 
     return () => {
       clearInterval(interval);
+      window.removeEventListener("scroll", handleUserInteraction);
+      document.removeEventListener("scroll", handleUserInteraction);
+      window.removeEventListener("wheel", handleUserInteraction);
+      window.removeEventListener("touchmove", handleUserInteraction);
+      window.removeEventListener("pointermove", handleUserInteraction);
+      window.removeEventListener("mousemove", handleUserInteraction);
       window.removeEventListener("pointerdown", handleUserInteraction);
       window.removeEventListener("click", handleUserInteraction);
       window.removeEventListener("keydown", handleUserInteraction);
