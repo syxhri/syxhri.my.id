@@ -79,7 +79,7 @@ export async function GET() {
 
     // Spotify search link for authentic Spotify experience
     const searchQuery = encodeURIComponent(`${title} ${artist}`.trim());
-    const spotifyUrl = `https://open.spotify.com/search/${searchQuery}`;
+    const spotifyUrl = `https://open.spotify.com/search/result/${searchQuery}`;
 
     return NextResponse.json(
       {

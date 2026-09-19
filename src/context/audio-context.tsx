@@ -21,7 +21,6 @@ const AudioContext = createContext<AudioContextType>({
 export const useAudio = () => useContext(AudioContext);
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
-  // Default to unmuted as requested by user
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [trackTitle, setTrackTitle] = useState<string | null>(null);
@@ -32,6 +31,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const currentKeyRef = useRef<string | null>(null);
   const isMutedRef = useRef<boolean>(false);
   const activeSourceRef = useRef<"youtube" | "html5">("youtube");
+  const fallbackAudioUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     isMutedRef.current = isMuted;
@@ -66,14 +66,16 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
     }
 
-    // Prepare fallback HTML5 audio
+    // Prepare fallback HTML5 audio (dormant unless YouTube fails)
     if (!audioRef.current) {
       const audio = new Audio();
       audio.loop = true;
-      audio.preload = "auto";
+      audio.preload = "none";
       audio.muted = isMutedRef.current;
 
-      audio.onplay = () => setIsPlaying(true);
+      audio.onplay = () => {
+        if (activeSourceRef.current === "html5") setIsPlaying(true);
+      };
       audio.onpause = () => {
         if (activeSourceRef.current === "html5") setIsPlaying(false);
       };
@@ -86,7 +88,13 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
     const initOrLoadYt = (videoId: string) => {
       activeSourceRef.current = "youtube";
-      if (audioRef.current) audioRef.current.pause();
+
+      // Completely silence and unload HTML5 audio so it never plays simultaneously
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.removeAttribute("src");
+        audioRef.current.load();
+      }
 
       const createPlayer = () => {
         try {
@@ -126,9 +134,10 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
                 }
               },
               onError: () => {
-                // If YouTube embedding is restricted for this track, fallback to audio stream
-                if (audioRef.current && audioRef.current.src) {
+                // Only if YouTube fails, fall back to audio stream
+                if (fallbackAudioUrlRef.current && audioRef.current) {
                   activeSourceRef.current = "html5";
+                  audioRef.current.src = fallbackAudioUrlRef.current;
                   audioRef.current.muted = isMutedRef.current;
                   audioRef.current.play().catch(() => {});
                 }
@@ -177,16 +186,15 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         if (!res.ok) return;
         const data = await res.json();
 
-        // Store fallback audio stream
-        if (data?.audioUrl && audioRef.current) {
-          audioRef.current.src = data.audioUrl;
-        }
+        fallbackAudioUrlRef.current = data?.audioUrl || null;
 
-        // Play full song via YouTube Music ID if available
+        // If YouTube ID available, play full song exclusively through YouTube
         if (data && data.youtubeId) {
           initOrLoadYt(data.youtubeId);
         } else if (data?.audioUrl && audioRef.current) {
+          // Fallback if YouTube ID is somehow missing
           activeSourceRef.current = "html5";
+          audioRef.current.src = data.audioUrl;
           audioRef.current.muted = isMutedRef.current;
           audioRef.current.play().catch(() => {});
         }
@@ -220,12 +228,11 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     // Ensure audio starts unmuted on first interaction if blocked by browser policy
     const handleUserInteraction = () => {
       if (!isMutedRef.current) {
-        if (ytPlayerRef.current && typeof ytPlayerRef.current.unMute === "function") {
+        if (activeSourceRef.current === "youtube" && ytPlayerRef.current && typeof ytPlayerRef.current.unMute === "function") {
           ytPlayerRef.current.unMute();
           ytPlayerRef.current.setVolume(100);
           ytPlayerRef.current.playVideo();
-        }
-        if (audioRef.current && audioRef.current.paused && audioRef.current.src) {
+        } else if (activeSourceRef.current === "html5" && audioRef.current && audioRef.current.paused && audioRef.current.src) {
           audioRef.current.muted = false;
           audioRef.current.play().catch(() => {});
         }
@@ -255,8 +262,8 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("asa_music_muted", nextMuted ? "true" : "false");
     } catch {}
 
-    // Control YouTube Player
-    if (ytPlayerRef.current) {
+    // Only control the active player
+    if (activeSourceRef.current === "youtube" && ytPlayerRef.current) {
       try {
         if (nextMuted) {
           ytPlayerRef.current.mute();
@@ -268,10 +275,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       } catch (e) {
         console.error("Error toggling YouTube mute:", e);
       }
-    }
-
-    // Control Fallback HTML5 Audio
-    if (audioRef.current) {
+    } else if (activeSourceRef.current === "html5" && audioRef.current) {
       audioRef.current.muted = nextMuted;
       if (!nextMuted) {
         audioRef.current.play().catch(() => {});

@@ -96,8 +96,8 @@ export default function NowPlaying({ className }: { className?: string }) {
         "bg-white/60 dark:bg-shark-900/60 backdrop-blur-md",
         "border border-shark-200/60 dark:border-shark-800/60",
         "shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.3)]",
-        "hover:border-[#1DB954]/50 dark:hover:border-[#1DB954]/60",
-        "hover:shadow-[0_8px_28px_-6px_rgba(29,185,84,0.15)]",
+        "hover:border-primary-500/50 dark:hover:border-primary-400/60",
+        "hover:shadow-[0_8px_28px_-6px_rgba(2,132,199,0.15)]",
         "hover:-translate-y-0.5",
         "transition-all duration-300 ease-out",
         className
@@ -114,7 +114,7 @@ export default function NowPlaying({ className }: { className?: string }) {
               loading="lazy"
             />
           ) : (
-            <IconDisc className="w-6 h-6 text-[#1DB954] transition-transform duration-700 group-hover:rotate-45" />
+            <IconDisc className="w-6 h-6 text-primary-500 dark:text-primary-400 transition-transform duration-700 group-hover:rotate-45" />
           )}
 
           {isPlaying && (
@@ -153,7 +153,7 @@ export default function NowPlaying({ className }: { className?: string }) {
           </p>
         </div>
 
-        <div className="shrink-0 text-neutral-400 dark:text-neutral-500 group-hover:text-[#1DB954] group-hover:translate-x-0.5 transition-all">
+        <div className="shrink-0 text-neutral-400 dark:text-neutral-500 group-hover:text-primary-500 dark:group-hover:text-primary-400 group-hover:translate-x-0.5 transition-all">
           <IconExternalLink className="w-4 h-4" />
         </div>
       </div>

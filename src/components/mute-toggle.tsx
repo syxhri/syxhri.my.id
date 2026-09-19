@@ -31,11 +31,11 @@ export default function MuteToggle({ iconSize = 16 }: { iconSize?: number }) {
         <IconVolumeOff size={iconSize} className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors" />
       ) : (
         <span className="relative flex items-center justify-center">
-          <IconVolume size={iconSize} className="text-[#1DB954] transition-colors" />
+          <IconVolume size={iconSize} className="text-primary-500 dark:text-primary-400 transition-colors" />
           {isPlaying && (
             <span className="absolute -top-0.5 -right-0.5 flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#1DB954] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#1DB954]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary-500 dark:bg-primary-400"></span>
             </span>
           )}
         </span>
