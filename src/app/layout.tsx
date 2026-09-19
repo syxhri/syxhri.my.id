@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     shortcut: '/pfp-paper.png',
     apple: '/pfp-paper.png',
   },
-  description: "Alfisyahri Amrun A., also known as Asa, is a Software Engineering student from Gorontalo, Indonesia, with a strong interest in software development, backend systems, web development, and data-related technologies.",
+  description: "Alfisyahri Amrun A., also known as Asa, is a Software Engineering Technology (TRPL) student from Gorontalo, Indonesia, with a strong interest in software development, backend systems, web development, and data-related technologies.",
   keywords: [
     "Alfisyahri Amrun A.",
     "Asa",
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://syxhri.my.id',
-    title: 'Alfisyahri Amrun A. (Asa) — Software Engineering Student & Developer',
-    description: "Alfisyahri Amrun A., also known as Asa, is a Software Engineering student from Gorontalo, Indonesia, with a strong interest in software development, backend systems, web development, and data-related technologies.",
+    title: 'Alfisyahri Amrun A. (Asa) — Software Engineering Technology (TRPL) Student & Developer',
+    description: "Alfisyahri Amrun A., also known as Asa, is a Software Engineering Technology (TRPL) student from Gorontalo, Indonesia, with a strong interest in software development, backend systems, web development, and data-related technologies.",
     siteName: 'asa',
     images: [
       {
@@ -54,8 +54,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
-    title: 'Alfisyahri Amrun A. (Asa) — Software Engineering Student & Developer',
-    description: "Alfisyahri Amrun A., also known as Asa, is a Software Engineering student from Gorontalo, Indonesia, with a strong interest in software development, backend systems, web development, and data-related technologies.",
+    title: 'Alfisyahri Amrun A. (Asa) — Software Engineering Technology (TRPL) Student & Developer',
+    description: "Alfisyahri Amrun A., also known as Asa, is a Software Engineering Technology (TRPL) student from Gorontalo, Indonesia, with a strong interest in software development, backend systems, web development, and data-related technologies.",
     creator: '@syxhri',
     images: ['/pfp-paper.png'],
   },
@@ -82,13 +82,13 @@ const jsonLd = {
       url: 'https://syxhri.my.id',
       image: 'https://syxhri.my.id/pfp-paper.png',
       description:
-        'Software Engineering student from Gorontalo, Indonesia, with a strong interest in software development, backend systems, web development, and data-related technologies.',
+        'Software Engineering Technology (TRPL) student from Gorontalo, Indonesia, with a strong interest in software development, backend systems, web development, and data-related technologies.',
       sameAs: [
         'https://github.com/syxhri',
         'https://instagram.com/alfi.syahri',
         'https://www.linkedin.com/in/alfisyahri-asa',
       ],
-      jobTitle: 'Software Engineering Student & Developer',
+      jobTitle: 'Software Engineering Technology (TRPL) Student & Developer',
     },
     {
       '@type': 'WebSite',
@@ -116,6 +116,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet" />
+        <meta name="google-site-verification" content="pAJNiqsOvPcG6XpbZMKUrcM0pUc2nbI8lEMayPSOX_E" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

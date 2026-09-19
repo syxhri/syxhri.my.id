@@ -69,7 +69,7 @@ export default function Home() {
 
         <div className="text-neutral-700 dark:text-neutral-300 leading-7 flex flex-col gap-4 mt-4 text-justify">
           <p>
-            I am Alfisyahri Amrun A., also known as Asa, a Software Engineering student at Universitas Negeri Gorontalo. I have a strong interest in software development and enjoy learning by building projects, exploring different technologies, and turning ideas into working software.
+            I am Alfisyahri Amrun A., also known as Asa, a Software Engineering Technology (TRPL) student at Universitas Negeri Gorontalo. I have a strong interest in software development and enjoy learning by building projects, exploring different technologies, and turning ideas into working software.
           </p>
           <p>
             As a developer, I enjoy learning through personal projects and practical experiments. I have experience working with{" "}
@@ -77,7 +77,7 @@ export default function Home() {
             <span className="highlight">{contrib}</span> repositories on GitHub, ranging from small utility experiments to projects built to strengthen my technical skills.
           </p>
           <p>
-            My main interests span across backend development, web engineering, and data-related technologies. I work primarily with programming languages such as Python, JavaScript, TypeScript, Java and Go, while continuously deepening my understanding of database architectures, APIs, and modern development practices.
+            My main interests span across backend development, web Engineering Technology (TRPL), and data-related technologies. I work primarily with programming languages such as Python, JavaScript, TypeScript, Java and Go, while continuously deepening my understanding of database architectures, APIs, and modern development practices.
           </p>
         </div>
 
